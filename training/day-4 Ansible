@@ -1,0 +1,1403 @@
+CMD OUTPUT:
+
+PS C:\training\day3-Ansible> terraform apply -auto-approve -var name=itashi
+tls_private_key.keypair: Refreshing state... [id=91fc81ebe0acd7d6456838175ff3aa6813966a8c]
+local_file.tls_private_key: Refreshing state... [id=75841d860c9b9cbeb3cc5bc013f4b5d4f04efe2a]
+data.aws_ami.ubuntu: Reading...
+aws_key_pair.keypair: Refreshing state... [id=itashi]
+aws_security_group.ansibleController: Refreshing state... [id=sg-0fe7100d0bb0a41e2]
+data.aws_ami.ubuntu: Read complete after 1s [id=ami-068cf3d51efeb20d6]
+aws_instance.ansibleController: Refreshing state... [id=i-0962323f5323ad0bf]
+null_resource.copyAnsibleCfg: Refreshing state... [id=5238419801028265894]
+null_resource.copyPlaybooks: Refreshing state... [id=1322800299740881502]
+null_resource.copyPrivateKey: Refreshing state... [id=2664082298170668621]
+null_resource.installAnsible: Refreshing state... [id=472096751147424483]
+null_resource.runPlaybooks: Refreshing state... [id=8962742513109471410]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # null_resource.copyPlaybooks must be replaced
+-/+ resource "null_resource" "copyPlaybooks" {
+      ~ id       = "1322800299740881502" -> (known after apply)
+      ~ triggers = { # forces replacement
+          ~ "timestamp" = "2024-03-29T05:57:05Z" -> (known after apply)
+        }
+    }
+
+  # null_resource.runPlaybooks is tainted, so must be replaced
+-/+ resource "null_resource" "runPlaybooks" {
+      ~ id       = "8962742513109471410" -> (known after apply)
+      ~ triggers = {
+          ~ "copyPlaybooks" = "1322800299740881502" -> (known after apply)
+        }
+    }
+
+Plan: 2 to add, 0 to change, 2 to destroy.
+null_resource.runPlaybooks: Destroying... [id=8962742513109471410]
+null_resource.runPlaybooks: Destruction complete after 0s
+null_resource.copyPlaybooks: Destroying... [id=1322800299740881502]
+null_resource.copyPlaybooks: Destruction complete after 0s
+null_resource.copyPlaybooks: Creating...
+null_resource.copyPlaybooks: Provisioning with 'file'...
+null_resource.copyPlaybooks: Creation complete after 4s [id=3407372491605785046]
+null_resource.runPlaybooks: Creating...
+null_resource.runPlaybooks: Provisioning with 'remote-exec'...
+null_resource.runPlaybooks (remote-exec): Connecting to remote host via SSH...
+null_resource.runPlaybooks (remote-exec):   Host: 3.133.111.17
+null_resource.runPlaybooks (remote-exec):   User: ubuntu
+null_resource.runPlaybooks (remote-exec):   Password: false
+null_resource.runPlaybooks (remote-exec):   Private key: true
+null_resource.runPlaybooks (remote-exec):   Certificate: false
+null_resource.runPlaybooks (remote-exec):   SSH Agent: false
+null_resource.runPlaybooks (remote-exec):   Checking Host Key: false
+null_resource.runPlaybooks (remote-exec):   Target Platform: unix
+null_resource.runPlaybooks (remote-exec): Connected!
+
+null_resource.runPlaybooks (remote-exec): PLAY [my first playbook] *******************************************************
+
+null_resource.runPlaybooks (remote-exec): TASK [Gathering Facts] *********************************************************
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Install apache2] *********************************************************
+null_resource.runPlaybooks: Still creating... [10s elapsed]
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125] => (item=apache2)
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125] => (item=openjdk-17-jdk)
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125] => (item=wget)
+
+null_resource.runPlaybooks (remote-exec): PLAY RECAP *********************************************************************
+null_resource.runPlaybooks (remote-exec): 172.31.15.125              : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0      
+
+
+null_resource.runPlaybooks (remote-exec): PLAY [install tomcat] **********************************************************
+
+null_resource.runPlaybooks (remote-exec): TASK [Gathering Facts] *********************************************************
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Install JDK] *************************************************************
+null_resource.runPlaybooks: Still creating... [20s elapsed]
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Download Tomcat Tar File] ************************************************
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Create App Folder] *******************************************************
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Untar tomcat Tar file] ***************************************************
+
+null_resource.runPlaybooks (remote-exec): TASK [Copy tomcat init script] *************************************************
+null_resource.runPlaybooks (remote-exec): changed: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Start Tomcat Service] ****************************************************
+null_resource.runPlaybooks (remote-exec): fatal: [172.31.15.125]: FAILED! => {"changed": false, "msg": "Unable to start service tomcat: Job for tomcat.service failed because the control process exited with error code.\nSee \"systemctl status tomcat.service\" and \"journalctl -xeu tomcat.service\" for details.\n"}
+
+null_resource.runPlaybooks (remote-exec): PLAY RECAP *********************************************************************
+null_resource.runPlaybooks (remote-exec): 172.31.15.125              : ok=6    changed=1    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0      
+
+╷
+│ Error: remote-exec provisioner error
+│
+│   with null_resource.runPlaybooks,
+│   on ansibleController.tf line 89, in resource "null_resource" "runPlaybooks":
+│   89:   provisioner "remote-exec" {
+│
+│ error executing "/tmp/terraform_1977723271.sh": Process exited with status 2
+╵
+PS C:\training\day3-Ansible> terraform apply -auto-approve -var name=itashi
+tls_private_key.keypair: Refreshing state... [id=91fc81ebe0acd7d6456838175ff3aa6813966a8c]
+local_file.tls_private_key: Refreshing state... [id=75841d860c9b9cbeb3cc5bc013f4b5d4f04efe2a]
+data.aws_ami.ubuntu: Reading...
+aws_key_pair.keypair: Refreshing state... [id=itashi]
+aws_security_group.ansibleController: Refreshing state... [id=sg-0fe7100d0bb0a41e2]
+data.aws_ami.ubuntu: Read complete after 1s [id=ami-068cf3d51efeb20d6]
+aws_instance.ansibleController: Refreshing state... [id=i-0962323f5323ad0bf]
+null_resource.copyAnsibleCfg: Refreshing state... [id=5238419801028265894]
+null_resource.copyPlaybooks: Refreshing state... [id=3407372491605785046]
+null_resource.copyPrivateKey: Refreshing state... [id=2664082298170668621]
+null_resource.installAnsible: Refreshing state... [id=472096751147424483]
+null_resource.runPlaybooks: Refreshing state... [id=1579085120483436087]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # null_resource.copyPlaybooks must be replaced
+-/+ resource "null_resource" "copyPlaybooks" {
+      ~ id       = "3407372491605785046" -> (known after apply)
+      ~ triggers = { # forces replacement
+          ~ "timestamp" = "2024-03-29T06:12:26Z" -> (known after apply)
+        }
+    }
+
+  # null_resource.runPlaybooks is tainted, so must be replaced
+-/+ resource "null_resource" "runPlaybooks" {
+      ~ id       = "1579085120483436087" -> (known after apply)
+      ~ triggers = {
+          ~ "copyPlaybooks" = "3407372491605785046" -> (known after apply)
+        }
+    }
+
+Plan: 2 to add, 0 to change, 2 to destroy.
+null_resource.runPlaybooks: Destroying... [id=1579085120483436087]
+null_resource.runPlaybooks: Destruction complete after 0s
+null_resource.copyPlaybooks: Destroying... [id=3407372491605785046]
+null_resource.copyPlaybooks: Destruction complete after 0s
+null_resource.copyPlaybooks: Creating...
+null_resource.copyPlaybooks: Provisioning with 'file'...
+null_resource.copyPlaybooks: Creation complete after 4s [id=7754489968203198532]
+null_resource.runPlaybooks: Creating...
+null_resource.runPlaybooks: Provisioning with 'remote-exec'...
+null_resource.runPlaybooks (remote-exec): Connecting to remote host via SSH...
+null_resource.runPlaybooks (remote-exec):   Host: 3.133.111.17
+null_resource.runPlaybooks (remote-exec):   User: ubuntu
+null_resource.runPlaybooks (remote-exec):   Password: false
+null_resource.runPlaybooks (remote-exec):   Private key: true
+null_resource.runPlaybooks (remote-exec):   Certificate: false
+null_resource.runPlaybooks (remote-exec):   SSH Agent: false
+null_resource.runPlaybooks (remote-exec):   Checking Host Key: false
+null_resource.runPlaybooks (remote-exec):   Target Platform: unix
+null_resource.runPlaybooks (remote-exec): Connected!
+
+null_resource.runPlaybooks (remote-exec): PLAY [my first playbook] *******************************************************
+
+null_resource.runPlaybooks (remote-exec): TASK [Gathering Facts] *********************************************************
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Install apache2] *********************************************************
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125] => (item=apache2)
+null_resource.runPlaybooks: Still creating... [10s elapsed]
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125] => (item=openjdk-17-jdk)
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125] => (item=wget)
+
+null_resource.runPlaybooks (remote-exec): PLAY RECAP *********************************************************************
+null_resource.runPlaybooks (remote-exec): 172.31.15.125              : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0      
+
+
+null_resource.runPlaybooks (remote-exec): PLAY [install tomcat] **********************************************************
+
+null_resource.runPlaybooks (remote-exec): TASK [Gathering Facts] *********************************************************
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Install JDK] *************************************************************
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Download Tomcat Tar File] ************************************************
+null_resource.runPlaybooks: Still creating... [20s elapsed]
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Create App Folder] *******************************************************
+
+null_resource.runPlaybooks (remote-exec): TASK [Untar tomcat Tar file] ***************************************************
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Copy tomcat init script] *************************************************
+null_resource.runPlaybooks (remote-exec): changed: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Start Tomcat Service] ****************************************************
+null_resource.runPlaybooks (remote-exec): changed: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): PLAY RECAP *********************************************************************
+null_resource.runPlaybooks (remote-exec): 172.31.15.125              : ok=7    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0      
+
+null_resource.runPlaybooks: Creation complete after 26s [id=1349873917420027294]
+
+Apply complete! Resources: 2 added, 0 changed, 2 destroyed.
+
+Outputs:
+
+ansibleControllerPublicIp = "3.133.111.17"
+PS C:\training\day3-Ansible> ssh -i c:\users\admin\.ssh\Itashi.pem ubuntu@3.133.111.17
+Welcome to Ubuntu 22.04.4 LTS (GNU/Linux 6.5.0-1016-aws x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+  System information as of Fri Mar 29 06:17:55 UTC 2024
+
+  System load:  0.19091796875     Processes:             107
+  Usage of /:   38.6% of 7.57GB   Users logged in:       0
+  Memory usage: 35%               IPv4 address for eth0: 172.31.15.125
+  Swap usage:   0%
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+1 additional security update can be applied with ESM Apps.
+Learn more about enabling ESM Apps service at https://ubuntu.com/esm
+
+
+Last login: Fri Mar 29 06:16:19 2024 from 172.31.15.125
+ubuntu@ip-172-31-15-125:~$ ls
+ansible.cfg  myplaybook.yaml  myplaybook.yml  selfManagedNode  tomcat-init.j2  tomcat_playbook.yml
+ubuntu@ip-172-31-15-125:~$ Cat /etc/init.d/tomcat
+Command 'Cat' not found, did you mean:
+  command 'pat' from deb dist (1:3.5-236-1)
+  command 'cat' from deb coreutils (8.32-4.1ubuntu1)
+  command 'at' from deb at (3.2.5-1ubuntu1)
+  command 'dat' from deb liballegro4-dev (2:4.4.3.1-2)
+  command 'iat' from deb iat (0.1.3-7build1)
+Try: sudo apt install <deb name>
+ubuntu@ip-172-31-15-125:~$ cat /etc/init.d/tomcat
+#!/bin/bash
+
+#Location of JAVA_HOME (bin files)
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+
+#Add Java binary files to PATH
+export PATH=$JAVA_HOME/bin:$PATH
+
+#CATALINA_HOME is the location of the bin files of Tomcat
+export CATALINA_HOME="/opt/app/apache-tomcat-10.1.20"
+
+#CATALINA_BASE is the location of the configuration files of this instance of Tomcat
+export CATALINA_BASE="/opt/app/apache-tomcat-10.1.20"
+
+#TOMCAT_USER is the default user of tomcat
+export TOMCAT_USER=root
+
+#TOMCAT_USAGE is the message if this script is called without any options
+TOMCAT_USAGE="Usage: $0 {\e[00;32mstart\e[00m|\e[00;31mstop\e[00m|\e[00;32mstatus\e[00m|\e[00;31mrestart\e[00m}"
+
+#SHUTDOWN_WAIT is wait time in seconds for java proccess to stop
+SHUTDOWN_WAIT=25
+
+tomcat_pid() {
+        echo `ps -fe | grep $CATALINA_BASE | grep -v grep | tr -s " "|cut -d" " -f2`
+}
+
+start() {
+  pid=$(tomcat_pid)
+  if [ -n "$pid" ]
+  then
+    echo -e "\e[00;31mTomcat is already running (pid: $pid)\e[00m"
+  else
+    # Start tomcat
+    echo -e "\e[00;32mStarting tomcat\e[00m"
+    #ulimit -n 100000
+    #umask 007
+    #/bin/su -p -s /bin/sh tomcat
+        if [ `user_exists $TOMCAT_USER` = "1" ]
+        then
+                su $TOMCAT_USER -c $CATALINA_HOME/bin/startup.sh
+        else
+                sh $CATALINA_HOME/bin/startup.sh
+        fi
+        status
+  fi
+  return 0
+}
+
+status(){
+          pid=$(tomcat_pid)
+          if [ -n "$pid" ]; then echo -e "\e[00;32mTomcat is running with pid: $pid\e[00m"
+          else echo -e "\e[00;31mTomcat is not running\e[00m"
+          fi
+}
+
+stop() {
+  pid=$(tomcat_pid)
+  if [ -n "$pid" ]
+  then
+    echo -e "\e[00;31mStoping Tomcat\e[00m"
+    #/bin/su -p -s /bin/sh tomcat
+        sh $CATALINA_HOME/bin/shutdown.sh
+
+    let kwait=$SHUTDOWN_WAIT
+    count=0;
+    until [ `ps -p $pid | grep -c $pid` = '0' ] || [ $count -gt $kwait ]
+    do
+      echo -n -e "\n\e[00;31mwaiting for processes to exit\e[00m";
+      sleep 1
+      let count=$count+1;
+    done
+
+    if [ $count -gt $kwait ]; then
+      echo -n -e "\n\e[00;31mkilling processes which didn't stop after $SHUTDOWN_WAIT seconds\e[00m"
+      kill -9 $pid
+    fi
+  else
+    echo -e "\e[00;31mTomcat is not running\e[00m"
+  fi
+
+  return 0
+}
+
+user_exists(){
+        if id -u $1 >/dev/null 2>&1; then
+        echo "1"
+        else
+                echo "0"
+        fi
+}
+
+case $1 in
+
+        start)
+          start
+        ;;
+
+        stop)
+          stop
+        ;;
+
+        restart)
+          stop
+          start
+        ;;
+
+        status)
+                status
+
+
+        *)
+                echo -e $TOMCAT_USAGE
+        ;;
+esac
+exit 0
+ubuntu@ip-172-31-15-125:~$ exit
+logout
+Connection to 3.133.111.17 closed.
+PS C:\training\day3-Ansible> terraform apply -auto-approve -var name=itashi
+var.password
+  Enter the password for tomcat GUI user admin
+
+  Enter a value: 
+
+tls_private_key.keypair: Refreshing state... [id=91fc81ebe0acd7d6456838175ff3aa6813966a8c]
+local_file.tls_private_key: Refreshing state... [id=75841d860c9b9cbeb3cc5bc013f4b5d4f04efe2a]
+data.aws_ami.ubuntu: Reading...
+aws_key_pair.keypair: Refreshing state... [id=itashi]
+aws_security_group.ansibleController: Refreshing state... [id=sg-0fe7100d0bb0a41e2]
+data.aws_ami.ubuntu: Read complete after 2s [id=ami-068cf3d51efeb20d6]
+aws_instance.ansibleController: Refreshing state... [id=i-0962323f5323ad0bf]
+null_resource.copyPrivateKey: Refreshing state... [id=2664082298170668621]
+null_resource.copyAnsibleCfg: Refreshing state... [id=5238419801028265894]
+null_resource.copyPlaybooks: Refreshing state... [id=7754489968203198532] 
+null_resource.installAnsible: Refreshing state... [id=472096751147424483]
+null_resource.runPlaybooks: Refreshing state... [id=1349873917420027294]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # null_resource.copyPlaybooks must be replaced
+-/+ resource "null_resource" "copyPlaybooks" {
+      ~ id       = "7754489968203198532" -> (known after apply)
+      ~ triggers = { # forces replacement
+          ~ "timestamp" = "2024-03-29T06:15:48Z" -> (known after apply)
+        }
+    }
+
+  # null_resource.runPlaybooks must be replaced
+-/+ resource "null_resource" "runPlaybooks" {
+      ~ id       = "1349873917420027294" -> (known after apply)
+      ~ triggers = { # forces replacement
+          ~ "copyPlaybooks" = "7754489968203198532" -> (known after apply)
+        }
+    }
+
+Plan: 2 to add, 0 to change, 2 to destroy.
+null_resource.runPlaybooks: Destroying... [id=1349873917420027294]
+null_resource.runPlaybooks: Destruction complete after 0s
+null_resource.copyPlaybooks: Destroying... [id=7754489968203198532]
+null_resource.copyPlaybooks: Destruction complete after 0s
+null_resource.copyPlaybooks: Creating...
+null_resource.copyPlaybooks: Provisioning with 'file'...
+null_resource.copyPlaybooks: Creation complete after 4s [id=9017736003926583029]
+null_resource.runPlaybooks: Creating...
+null_resource.runPlaybooks: Provisioning with 'remote-exec'...
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks: Still creating... [10s elapsed]
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks: Still creating... [20s elapsed]
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+╷
+│ Error: remote-exec provisioner error
+│
+│   with null_resource.runPlaybooks,
+│   on ansibleController.tf line 89, in resource "null_resource" "runPlaybooks":
+│   89:   provisioner "remote-exec" {
+│
+│ error executing "/tmp/terraform_803665474.sh": Process exited with status 4
+╵
+PS C:\training\day3-Ansible> terraform apply -auto-approve -var name=itashi
+var.password
+  Enter the password for tomcat GUI user admin
+
+  Enter a value:
+
+tls_private_key.keypair: Refreshing state... [id=91fc81ebe0acd7d6456838175ff3aa6813966a8c]
+local_file.tls_private_key: Refreshing state... [id=75841d860c9b9cbeb3cc5bc013f4b5d4f04efe2a]
+data.aws_ami.ubuntu: Reading...
+aws_key_pair.keypair: Refreshing state... [id=itashi]
+aws_security_group.ansibleController: Refreshing state... [id=sg-0fe7100d0bb0a41e2]
+data.aws_ami.ubuntu: Read complete after 1s [id=ami-068cf3d51efeb20d6]
+aws_instance.ansibleController: Refreshing state... [id=i-0962323f5323ad0bf]
+null_resource.copyPrivateKey: Refreshing state... [id=2664082298170668621]
+null_resource.copyPlaybooks: Refreshing state... [id=9017736003926583029]
+null_resource.copyAnsibleCfg: Refreshing state... [id=5238419801028265894]
+null_resource.installAnsible: Refreshing state... [id=472096751147424483]
+null_resource.runPlaybooks: Refreshing state... [id=3670551538950128520]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # null_resource.copyPlaybooks must be replaced
+-/+ resource "null_resource" "copyPlaybooks" {
+      ~ id       = "9017736003926583029" -> (known after apply)
+      ~ triggers = { # forces replacement
+          ~ "timestamp" = "2024-03-29T06:54:39Z" -> (known after apply)
+        }
+    }
+
+  # null_resource.runPlaybooks is tainted, so must be replaced
+-/+ resource "null_resource" "runPlaybooks" {
+      ~ id       = "3670551538950128520" -> (known after apply)
+      ~ triggers = {
+          ~ "copyPlaybooks" = "9017736003926583029" -> (known after apply)
+        }
+    }
+
+Plan: 2 to add, 0 to change, 2 to destroy.
+null_resource.runPlaybooks: Destroying... [id=3670551538950128520]
+null_resource.runPlaybooks: Destruction complete after 0s
+null_resource.copyPlaybooks: Destroying... [id=9017736003926583029]
+null_resource.copyPlaybooks: Destruction complete after 0s
+null_resource.copyPlaybooks: Creating...
+null_resource.copyPlaybooks: Provisioning with 'file'...
+null_resource.copyPlaybooks: Creation complete after 5s [id=4614579168617110080]
+null_resource.runPlaybooks: Creating...
+null_resource.runPlaybooks: Provisioning with 'remote-exec'...
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks: Still creating... [10s elapsed]
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+╷
+│ Error: remote-exec provisioner error
+│
+│   with null_resource.runPlaybooks,
+│   on ansibleController.tf line 89, in resource "null_resource" "runPlaybooks":
+│   89:   provisioner "remote-exec" {
+│
+│ error executing "/tmp/terraform_351020206.sh": Process exited with status 4
+╵
+PS C:\training\day3-Ansible> terraform apply -auto-approve -var name=itashi
+var.password
+  Enter the password for tomcat GUI user admin
+
+  Enter a value: 
+
+tls_private_key.keypair: Refreshing state... [id=91fc81ebe0acd7d6456838175ff3aa6813966a8c]
+local_file.tls_private_key: Refreshing state... [id=75841d860c9b9cbeb3cc5bc013f4b5d4f04efe2a]
+data.aws_ami.ubuntu: Reading...
+aws_key_pair.keypair: Refreshing state... [id=itashi]
+aws_security_group.ansibleController: Refreshing state... [id=sg-0fe7100d0bb0a41e2]
+data.aws_ami.ubuntu: Read complete after 2s [id=ami-068cf3d51efeb20d6]
+aws_instance.ansibleController: Refreshing state... [id=i-0962323f5323ad0bf]
+null_resource.copyAnsibleCfg: Refreshing state... [id=5238419801028265894]
+null_resource.copyPlaybooks: Refreshing state... [id=4614579168617110080]
+null_resource.copyPrivateKey: Refreshing state... [id=2664082298170668621]
+null_resource.installAnsible: Refreshing state... [id=472096751147424483]
+null_resource.runPlaybooks: Refreshing state... [id=5773936324841928241]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # null_resource.copyPlaybooks must be replaced
+-/+ resource "null_resource" "copyPlaybooks" {
+      ~ id       = "4614579168617110080" -> (known after apply)
+      ~ triggers = { # forces replacement
+          ~ "timestamp" = "2024-03-29T06:55:56Z" -> (known after apply)
+        }
+    }
+
+  # null_resource.runPlaybooks is tainted, so must be replaced
+-/+ resource "null_resource" "runPlaybooks" {
+      ~ id       = "5773936324841928241" -> (known after apply)
+      ~ triggers = {
+          ~ "copyPlaybooks" = "4614579168617110080" -> (known after apply)
+        }
+    }
+
+Plan: 2 to add, 0 to change, 2 to destroy.
+null_resource.runPlaybooks: Destroying... [id=5773936324841928241]
+null_resource.runPlaybooks: Destruction complete after 0s
+null_resource.copyPlaybooks: Destroying... [id=4614579168617110080]
+null_resource.copyPlaybooks: Destruction complete after 0s
+null_resource.copyPlaybooks: Creating...
+null_resource.copyPlaybooks: Provisioning with 'file'...
+null_resource.copyPlaybooks: Creation complete after 4s [id=3112605167147417163]
+null_resource.runPlaybooks: Creating...
+null_resource.runPlaybooks: Provisioning with 'remote-exec'...
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks: Still creating... [10s elapsed]
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+╷
+│ Error: remote-exec provisioner error
+│
+│   with null_resource.runPlaybooks,
+│   on ansibleController.tf line 89, in resource "null_resource" "runPlaybooks":
+│   89:   provisioner "remote-exec" {
+│
+│ error executing "/tmp/terraform_130196359.sh": Process exited with status 4
+╵
+PS C:\training\day3-Ansible> terraform apply -auto-approve -var name=itashi
+var.password
+  Enter the password for tomcat GUI user admin
+
+  Enter a value:
+
+tls_private_key.keypair: Refreshing state... [id=91fc81ebe0acd7d6456838175ff3aa6813966a8c]
+local_file.tls_private_key: Refreshing state... [id=75841d860c9b9cbeb3cc5bc013f4b5d4f04efe2a]
+data.aws_ami.ubuntu: Reading...
+aws_key_pair.keypair: Refreshing state... [id=itashi]
+aws_security_group.ansibleController: Refreshing state... [id=sg-0fe7100d0bb0a41e2]
+data.aws_ami.ubuntu: Read complete after 1s [id=ami-068cf3d51efeb20d6]
+aws_instance.ansibleController: Refreshing state... [id=i-0962323f5323ad0bf]
+null_resource.copyAnsibleCfg: Refreshing state... [id=5238419801028265894]
+null_resource.copyPlaybooks: Refreshing state... [id=3112605167147417163]
+null_resource.copyPrivateKey: Refreshing state... [id=2664082298170668621]
+null_resource.installAnsible: Refreshing state... [id=472096751147424483]
+null_resource.runPlaybooks: Refreshing state... [id=138343668527535279]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # null_resource.copyPlaybooks must be replaced
+-/+ resource "null_resource" "copyPlaybooks" {
+      ~ id       = "3112605167147417163" -> (known after apply)
+      ~ triggers = { # forces replacement
+          ~ "timestamp" = "2024-03-29T07:04:16Z" -> (known after apply)
+        }
+    }
+
+  # null_resource.runPlaybooks is tainted, so must be replaced
+-/+ resource "null_resource" "runPlaybooks" {
+      ~ id       = "138343668527535279" -> (known after apply)
+      ~ triggers = {
+          ~ "copyPlaybooks" = "3112605167147417163" -> (known after apply)
+        }
+    }
+
+Plan: 2 to add, 0 to change, 2 to destroy.
+null_resource.runPlaybooks: Destroying... [id=138343668527535279]
+null_resource.runPlaybooks: Destruction complete after 1s
+null_resource.copyPlaybooks: Destroying... [id=3112605167147417163]
+null_resource.copyPlaybooks: Destruction complete after 0s
+null_resource.copyPlaybooks: Creating...
+null_resource.copyPlaybooks: Provisioning with 'file'...
+null_resource.copyPlaybooks: Creation complete after 4s [id=7047598107317908968]
+null_resource.runPlaybooks: Creating...
+null_resource.runPlaybooks: Provisioning with 'remote-exec'...
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks: Still creating... [10s elapsed]
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks: Still creating... [20s elapsed]
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks: Creation complete after 28s [id=3025276617607247768]
+
+Apply complete! Resources: 2 added, 0 changed, 2 destroyed.
+
+Outputs:
+
+ansibleControllerPublicIp = "3.133.111.17"
+PS C:\training\day3-Ansible> terraform apply -auto-approve -var name=itashi
+var.password
+  Enter the password for tomcat GUI user admin
+
+  Enter a value: 
+
+tls_private_key.keypair: Refreshing state... [id=91fc81ebe0acd7d6456838175ff3aa6813966a8c]
+local_file.tls_private_key: Refreshing state... [id=75841d860c9b9cbeb3cc5bc013f4b5d4f04efe2a]
+data.aws_ami.ubuntu: Reading...
+aws_key_pair.keypair: Refreshing state... [id=itashi]
+aws_security_group.ansibleController: Refreshing state... [id=sg-0fe7100d0bb0a41e2]
+data.aws_ami.ubuntu: Read complete after 1s [id=ami-068cf3d51efeb20d6]
+aws_instance.ansibleController: Refreshing state... [id=i-0962323f5323ad0bf]
+null_resource.copyPrivateKey: Refreshing state... [id=2664082298170668621]
+null_resource.copyAnsibleCfg: Refreshing state... [id=5238419801028265894]
+null_resource.copyPlaybooks: Refreshing state... [id=7047598107317908968]
+null_resource.installAnsible: Refreshing state... [id=472096751147424483]
+null_resource.runPlaybooks: Refreshing state... [id=3025276617607247768]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  + create
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # null_resource.copyPlaybooks must be replaced
+-/+ resource "null_resource" "copyPlaybooks" {
+      ~ id       = "7047598107317908968" -> (known after apply)
+      ~ triggers = { # forces replacement
+          ~ "timestamp" = "2024-03-29T07:07:21Z" -> (known after apply)
+        }
+    }
+
+  # null_resource.runPlaybooks must be replaced
+-/+ resource "null_resource" "runPlaybooks" {
+      ~ id       = "3025276617607247768" -> (known after apply)
+      ~ triggers = { # forces replacement
+          ~ "copyPlaybooks" = "7047598107317908968" -> (known after apply)
+        }
+    }
+
+  # null_resource.runPlaybooks_withPassword will be created
+  + resource "null_resource" "runPlaybooks_withPassword" {
+      + id       = (known after apply)
+      + triggers = {
+          + "copyPlaybooks" = (known after apply)
+        }
+    }
+
+Plan: 3 to add, 0 to change, 2 to destroy.
+null_resource.runPlaybooks: Destroying... [id=3025276617607247768]
+null_resource.runPlaybooks: Destruction complete after 0s
+null_resource.copyPlaybooks: Destroying... [id=7047598107317908968]
+null_resource.copyPlaybooks: Destruction complete after 0s
+null_resource.copyPlaybooks: Creating...
+null_resource.copyPlaybooks: Provisioning with 'file'...
+null_resource.copyPlaybooks: Creation complete after 5s [id=3316923357030886804]
+null_resource.runPlaybooks: Creating...
+null_resource.runPlaybooks: Provisioning with 'remote-exec'...
+null_resource.runPlaybooks (remote-exec): Connecting to remote host via SSH...
+null_resource.runPlaybooks (remote-exec):   Host: 3.133.111.17
+null_resource.runPlaybooks (remote-exec):   User: ubuntu
+null_resource.runPlaybooks (remote-exec):   Password: false
+null_resource.runPlaybooks (remote-exec):   Private key: true
+null_resource.runPlaybooks (remote-exec):   Certificate: false
+null_resource.runPlaybooks (remote-exec):   SSH Agent: false
+null_resource.runPlaybooks (remote-exec):   Checking Host Key: false
+null_resource.runPlaybooks (remote-exec):   Target Platform: unix
+null_resource.runPlaybooks (remote-exec): Connected!
+
+null_resource.runPlaybooks (remote-exec): PLAY [my first playbook] *******************************************************
+
+null_resource.runPlaybooks (remote-exec): TASK [Gathering Facts] *********************************************************
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Install apache2] *********************************************************
+null_resource.runPlaybooks: Still creating... [10s elapsed]
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125] => (item=apache2)
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125] => (item=openjdk-17-jdk)
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125] => (item=wget)
+
+null_resource.runPlaybooks (remote-exec): PLAY RECAP *********************************************************************
+null_resource.runPlaybooks (remote-exec): 172.31.15.125              : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0      
+
+
+null_resource.runPlaybooks (remote-exec): PLAY [install tomcat] **********************************************************
+
+null_resource.runPlaybooks (remote-exec): TASK [Gathering Facts] *********************************************************
+null_resource.runPlaybooks: Still creating... [20s elapsed]
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Install JDK] *************************************************************
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Download Tomcat Tar File] ************************************************
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Create App Folder] *******************************************************
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Untar tomcat Tar file] ***************************************************
+null_resource.runPlaybooks (remote-exec): changed: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Copy tomcat init script] *************************************************
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Copy manager-context.xml init script] ************************************
+null_resource.runPlaybooks: Still creating... [30s elapsed]
+null_resource.runPlaybooks (remote-exec): changed: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Start Tomcat Service] ****************************************************
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): PLAY RECAP *********************************************************************
+null_resource.runPlaybooks (remote-exec): 172.31.15.125              : ok=8    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0      
+
+null_resource.runPlaybooks: Creation complete after 32s [id=3464185339372206050]
+null_resource.runPlaybooks_withPassword: Creating...
+null_resource.runPlaybooks_withPassword: Provisioning with 'remote-exec'...
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword: Creation complete after 9s [id=330837379299689621]
+
+Apply complete! Resources: 3 added, 0 changed, 2 destroyed.
+
+Outputs:
+
+ansibleControllerPublicIp = "3.133.111.17"
+PS C:\training\day3-Ansible> terraform apply -auto-approve -var name=itashi
+var.password
+  Enter the password for tomcat GUI user admin
+
+  Enter a value: 
+
+tls_private_key.keypair: Refreshing state... [id=91fc81ebe0acd7d6456838175ff3aa6813966a8c]
+local_file.tls_private_key: Refreshing state... [id=75841d860c9b9cbeb3cc5bc013f4b5d4f04efe2a]
+data.aws_ami.ubuntu: Reading...
+aws_key_pair.keypair: Refreshing state... [id=itashi]
+aws_security_group.ansibleController: Refreshing state... [id=sg-0fe7100d0bb0a41e2]
+data.aws_ami.ubuntu: Read complete after 1s [id=ami-068cf3d51efeb20d6]
+aws_instance.ansibleController: Refreshing state... [id=i-0962323f5323ad0bf]
+null_resource.copyPrivateKey: Refreshing state... [id=2664082298170668621]
+null_resource.copyPlaybooks: Refreshing state... [id=3316923357030886804] 
+null_resource.copyAnsibleCfg: Refreshing state... [id=5238419801028265894]
+null_resource.installAnsible: Refreshing state... [id=472096751147424483] 
+null_resource.runPlaybooks: Refreshing state... [id=3464185339372206050]
+null_resource.runPlaybooks_withPassword: Refreshing state... [id=330837379299689621]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # null_resource.copyPlaybooks must be replaced
+-/+ resource "null_resource" "copyPlaybooks" {
+      ~ id       = "3316923357030886804" -> (known after apply)
+      ~ triggers = { # forces replacement
+          ~ "timestamp" = "2024-03-29T07:53:28Z" -> (known after apply)
+        }
+    }
+
+  # null_resource.runPlaybooks must be replaced
+-/+ resource "null_resource" "runPlaybooks" {
+      ~ id       = "3464185339372206050" -> (known after apply)
+      ~ triggers = { # forces replacement
+          ~ "copyPlaybooks" = "3316923357030886804" -> (known after apply)
+        }
+    }
+
+  # null_resource.runPlaybooks_withPassword must be replaced
+-/+ resource "null_resource" "runPlaybooks_withPassword" {
+      ~ id       = "330837379299689621" -> (known after apply)
+      ~ triggers = { # forces replacement
+          ~ "copyPlaybooks" = "3316923357030886804" -> (known after apply)
+        }
+    }
+
+Plan: 3 to add, 0 to change, 3 to destroy.
+null_resource.runPlaybooks_withPassword: Destroying... [id=330837379299689621]
+null_resource.runPlaybooks_withPassword: Destruction complete after 0s
+null_resource.runPlaybooks: Destroying... [id=3464185339372206050]
+null_resource.runPlaybooks: Destruction complete after 0s
+null_resource.copyPlaybooks: Destroying... [id=3316923357030886804]
+null_resource.copyPlaybooks: Destruction complete after 0s
+null_resource.copyPlaybooks: Creating...
+null_resource.copyPlaybooks: Provisioning with 'file'...
+null_resource.copyPlaybooks: Creation complete after 5s [id=3856335808620869427]
+null_resource.runPlaybooks: Creating...
+null_resource.runPlaybooks: Provisioning with 'remote-exec'...
+null_resource.runPlaybooks (remote-exec): Connecting to remote host via SSH...
+null_resource.runPlaybooks (remote-exec):   Host: 3.133.111.17
+null_resource.runPlaybooks (remote-exec):   User: ubuntu
+null_resource.runPlaybooks (remote-exec):   Password: false
+null_resource.runPlaybooks (remote-exec):   Private key: true
+null_resource.runPlaybooks (remote-exec):   Certificate: false
+null_resource.runPlaybooks (remote-exec):   SSH Agent: false
+null_resource.runPlaybooks (remote-exec):   Checking Host Key: false
+null_resource.runPlaybooks (remote-exec):   Target Platform: unix
+null_resource.runPlaybooks (remote-exec): Connected!
+
+null_resource.runPlaybooks (remote-exec): PLAY [my first playbook] *******************************************************
+
+null_resource.runPlaybooks (remote-exec): TASK [Gathering Facts] *********************************************************
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Install apache2] *********************************************************
+null_resource.runPlaybooks: Still creating... [10s elapsed]
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125] => (item=apache2)
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125] => (item=openjdk-17-jdk)
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125] => (item=wget)
+
+null_resource.runPlaybooks (remote-exec): PLAY RECAP *********************************************************************
+null_resource.runPlaybooks (remote-exec): 172.31.15.125              : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0      
+
+
+null_resource.runPlaybooks (remote-exec): PLAY [install tomcat] **********************************************************
+
+null_resource.runPlaybooks (remote-exec): TASK [Gathering Facts] *********************************************************
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Install JDK] *************************************************************
+null_resource.runPlaybooks: Still creating... [20s elapsed]
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Download Tomcat Tar File] ************************************************
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Create App Folder] *******************************************************
+null_resource.runPlaybooks (remote-exec): ok: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Untar tomcat Tar file] ***************************************************
+null_resource.runPlaybooks (remote-exec): changed: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Copy tomcat init script] *************************************************
+null_resource.runPlaybooks (remote-exec): changed: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): TASK [Copy manager-context.xml init script] ************************************
+null_resource.runPlaybooks (remote-exec): changed: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): RUNNING HANDLER [Start Tomcat Service] *****************************************
+null_resource.runPlaybooks: Still creating... [30s elapsed]
+null_resource.runPlaybooks (remote-exec): changed: [172.31.15.125]
+
+null_resource.runPlaybooks (remote-exec): PLAY RECAP *********************************************************************
+null_resource.runPlaybooks (remote-exec): 172.31.15.125              : ok=8    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+null_resource.runPlaybooks: Creation complete after 31s [id=9077471880556324005]
+null_resource.runPlaybooks_withPassword: Creating...
+null_resource.runPlaybooks_withPassword: Provisioning with 'remote-exec'...
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword (remote-exec): (output suppressed due to sensitive value in config)
+null_resource.runPlaybooks_withPassword: Creation complete after 8s [id=2879842334209497642]
+
+Apply complete! Resources: 3 added, 0 changed, 3 destroyed.
+
+Outputs:
+
+ansibleControllerPublicIp = "3.133.111.17"
+PS C:\training\day3-Ansible> terraform destroy
+
+
+
+
+  ################################################################################################################################################################
+resource "aws_instance" "ansibleController" {
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = "t2.micro"
+  tags = {
+    Name = var.name
+  }
+  key_name = aws_key_pair.keypair.key_name
+  vpc_security_group_ids = [
+    aws_security_group.ansibleController.id
+  ]
+}
+
+resource "null_resource" "copyAnsibleCfg" {
+  triggers = {
+    ansibleControllerID = aws_instance.ansibleController.id
+  }
+  provisioner "file" {
+    connection {
+      type        = "ssh"
+      host        = aws_instance.ansibleController.public_ip
+      user        = "ubuntu"
+      private_key = tls_private_key.keypair.private_key_pem
+    }
+    source = "ansible.cfg"
+    destination = "./ansible.cfg"
+  }
+}
+
+resource "null_resource" "copyPrivateKey" {
+  triggers = {
+    ansibleControllerID = aws_instance.ansibleController.id
+  }
+  provisioner "file" {
+    connection {
+      type        = "ssh"
+      host        = aws_instance.ansibleController.public_ip
+      user        = "ubuntu"
+      private_key = tls_private_key.keypair.private_key_pem
+    }
+    destination = "/home/ubuntu/.ssh/id_rsa"
+    content = tls_private_key.keypair.private_key_pem
+  }
+}
+
+resource "null_resource" "installAnsible" {
+  triggers = {
+    ansibleControllerID = aws_instance.ansibleController.id
+  }
+  depends_on = [ 
+    null_resource.copyPrivateKey 
+  ]
+  provisioner "remote-exec" {
+    connection {
+      type        = "ssh"
+      host        = aws_instance.ansibleController.public_ip
+      user        = "ubuntu"
+      private_key = tls_private_key.keypair.private_key_pem
+    }
+    inline = [
+      "sudo apt-get update -y && sudo apt-get install -y ansible",
+      "echo ${aws_instance.ansibleController.private_ip} > selfManagedNode",
+      "chmod 600 ~/.ssh/id_rsa",
+      "ansible --version",
+      "ansible all -m ping"
+    ]
+  }
+}
+
+resource "null_resource" "copyPlaybooks" {
+  triggers = {
+    timestamp = timestamp()
+  }
+  provisioner "file" {
+    connection {
+      type        = "ssh"
+      host        = aws_instance.ansibleController.public_ip
+      user        = "ubuntu"
+      private_key = tls_private_key.keypair.private_key_pem
+    }
+    destination = "./"
+    source = "playbooks/"
+  }
+}
+
+resource "null_resource" "runPlaybooks" {
+  triggers = {
+    copyPlaybooks = null_resource.copyPlaybooks.id
+  }
+  depends_on = [ 
+    null_resource.copyPlaybooks
+  ]
+  provisioner "remote-exec" {
+    connection {
+      type        = "ssh"
+      host        = aws_instance.ansibleController.public_ip
+      user        = "ubuntu"
+      private_key = tls_private_key.keypair.private_key_pem
+    }
+    inline = [
+      "ansible-playbook myplaybook.yml"
+... (3 lines left)
+Collapse
+message.txt
+3 KB
+- name: my first playbook
+  hosts: all
+  become: true
+  become_user: root
+  tasks:
+      
+  - name: Install apache2
+    loop:
+      - apache2
+      - openjdk-17-jdk
+      - wget
+    package:
+      name: "{{ item }}"
+      state: present
+      update_cache: true
+A wild 
+Jessica Reehal
+ appeared.
+ — Today at 10:21 AM
+Priti Sharma
+ hopped into the server.
+ — Today at 10:28 AM
+Kulbhushan Mayer — Today at 10:42 AM
+tomcat_playbook.yml
+- name: install tomcat
+  hosts: all
+  become: true
+  become_user: root
+
+  tasks:
+  - name: Install JDK
+    package: 
+      name: openjdk-17-jdk
+      state: present
+      update_cache: true
+  - name: Download Tomcat Tar File
+    get_url:
+      url: https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.20/bin/apache-tomcat-10.1.20.tar.gz
+      dest: /tmp
+  - name: Create App Folder
+    file:
+      path: /opt/app
+      state: directory
+  - name: Untar tomcat Tar file
+    unarchive:
+      src: /tmp/apache-tomcat-10.1.20.tar.gz
+      dest: /opt/app    
+Kulbhushan Mayer — Today at 11:18 AM
+tomcat-init.j2
+```
+#!/bin/bash
+ 
+#Location of JAVA_HOME (bin files)
+export JAVA_HOME={{ JAVA_HOME }}
+ 
+Expand
+message.txt
+3 KB
+  - name: Copy tomcat init script
+    template:
+      src: tomcat-init.j2
+      dest: /etc/init.d/tomcat
+      mode: 0755
+  - name: Start Tomcat Service
+    service:
+      name: tomcat
+      state: started
+      daemon_reload: true
+  {
+    to_port          = 8080
+    from_port        = 8080
+    protocol         = "TCP"
+    cidr_blocks      = ["0.0.0.0/0"]
+    security_groups  = []
+    ipv6_cidr_blocks = []
+    prefix_list_ids  = []
+    self             = false
+    description      = "SSH Port"
+  }
+Glad you're here, 
+rvgupta24
+.
+ — Today at 11:25 AM
+Kulbhushan Mayer — Today at 11:26 AM
+  vars:
+    JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
+    CATALINA_HOME: /opt/app/apache-tomcat-10.1.20
+Kulbhushan Mayer — Today at 12:19 PM
+  - name: Copy tomcat-users.xml init script
+    template:
+      src: tomcat-users.xml.j2
+      dest: "{{ CATALINA_HOME }}/conf/tomcat-users.xml"
+  - name: Copy manager-context.xml init script
+    copy:
+      src: manager-context.xml
+      dest: "{{ CATALINA_HOME }}/webapps/manager/META-INF/context.xml"
+resource "null_resource" "runPlaybooks" {
+  triggers = {
+    copyPlaybooks = null_resource.copyPlaybooks.id
+  }
+  depends_on = [ 
+    null_resource.copyPlaybooks
+  ]
+  provisioner "remote-exec" {
+    connection {
+      type        = "ssh"
+      host        = aws_instance.ansibleController.public_ip
+      user        = "ubuntu"
+      private_key = tls_private_key.keypair.private_key_pem
+    }
+    inline = [
+      "ansible-playbook myplaybook.yml",
+      "ansible-playbook tomcat_playbook.yml --extra-vars password=${var.password}"
+    ]
+  }
+}
+
+
+variable "password" {
+  description = "Enter the password for tomcat GUI user admin"
+  sensitive = true
+}
+
+
+tomcat-users.xml.j2
+<?xml version="1.0" encoding="UTF-8"?>
+<tomcat-users xmlns="http://tomcat.apache.org/xml"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://tomcat.apache.org/xml tomcat-users.xsd"
+              version="1.0">
+  <role rolename="manager-gui"/>
+  <user username="admin" password="{{ password }}" roles="manager-gui"/>
+  <user username="robot" password="{{ password }}" roles="manager-script"/>
+</tomcat-users>
+manager-oontext.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Context antiResourceLocking="false" privileged="true" >
+  <CookieProcessor className="org.apache.tomcat.util.http.Rfc6265CookieProcessor"
+                   sameSiteCookies="strict" />
+  <Valve className="org.apache.catalina.valves.RemoteAddrValve"
+         allow=".*" />
+  <Manager sessionAttributeValueClassNameFilter="java\.lang\.(?:Boolean|Integer|Long|Number|String)|org\.apache\.catalina\.filters\.CsrfPreventionFilter\$LruCache(?:\$1)?|java\.util\.(?:Linked)?HashMap"/>
+</Context>
+Kulbhushan Mayer — Today at 1:17 PM
+- name: install tomcat
+  hosts: all
+  become: true
+  become_user: root
+  
+  vars:
+    JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
+    CATALINA_HOME: /opt/app/apache-tomcat-10.1.20
+
+  tasks:
+  - name: Install JDK
+    package: 
+      name: openjdk-17-jdk
+      state: present
+      update_cache: true
+    tags:
+      - without_pwd
+  - name: Download Tomcat Tar File
+    get_url:
+      url: https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.20/bin/apache-tomcat-10.1.20.tar.gz
+      dest: /tmp
+    tags:
+      - without_pwd
+  - name: Create App Folder
+    file:
+      path: /opt/app
+      state: directory
+    tags:
+      - without_pwd
+  - name: Untar tomcat Tar file
+    unarchive:
+      src: /tmp/apache-tomcat-10.1.20.tar.gz
+      dest: /opt/app
+    tags:
+      - without_pwd
+  - name: Copy tomcat init script
+    template:
+      src: tomcat-init.j2
+      dest: /etc/init.d/tomcat
+      mode: 0755
+    tags:
+      - without_pwd
+  - name: Copy tomcat-users.xml init script
+    template:
+      src: tomcat-users.xml.j2
+      dest: "{{ CATALINA_HOME }}/conf/tomcat-users.xml"
+    tags:
+      - with_pwd
+  - name: Copy manager-context.xml init script
+    copy:
+      src: manager-context.xml
+      dest: "{{ CATALINA_HOME }}/webapps/manager/META-INF/context.xml"
+    tags:
+      - without_pwd
+  - name: Start Tomcat Service
+    service:
+      name: tomcat
+      state: started
+      daemon_reload: true
+    tags:
+      - without_pwd
+resource "null_resource" "runPlaybooks" {
+  triggers = {
+    copyPlaybooks = null_resource.copyPlaybooks.id
+  }
+  depends_on = [ 
+    null_resource.copyPlaybooks
+  ]
+  provisioner "remote-exec" {
+    connection {
+      type        = "ssh"
+      host        = aws_instance.ansibleController.public_ip
+      user        = "ubuntu"
+      private_key = tls_private_key.keypair.private_key_pem
+    }
+    inline = [
+      "ansible-playbook myplaybook.yml",
+      "ansible-playbook tomcat_playbook.yml --tags without_pwd"
+    ]
+  }
+}
+
+resource "null_resource" "runPlaybooks_withPassword" {
+  triggers = {
+    copyPlaybooks = null_resource.copyPlaybooks.id
+  }
+  depends_on = [ 
+    null_resource.copyPlaybooks,
+    null_resource.runPlaybooks
+  ]
+  provisioner "remote-exec" {
+    connection {
+      type        = "ssh"
+      host        = aws_instance.ansibleController.public_ip
+      user        = "ubuntu"
+      private_key = tls_private_key.keypair.private_key_pem
+    }
+    inline = [
+      "ansible-playbook tomcat_playbook.yml --tags with_pwd --extra-vars password=${var.password}"
+    ]
+  }
+}
+Kulbhushan Mayer — Today at 1:44 PM
+  handlers:
+  - name: Start Tomcat Service
+    service:
+      name: tomcat
+      state: restarted
+      daemon_reload: true
+    tags:
+      - without_pwd
+  - name: Copy tomcat init script
+    template:
+      src: tomcat-init.j2
+      dest: /etc/init.d/tomcat
+      mode: 0755
+    tags:
+      - without_pwd
+    notify:
+    - Start Tomcat Service
+
+
+  
